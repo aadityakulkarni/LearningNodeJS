@@ -1,0 +1,13 @@
+// This file should not be committed to the git repository
+{
+  "test": {
+    "PORT": 3000,
+    "MONGODB_URI": "mongodb://localhost:27017/TodoAppTest",
+    "JWT_SECRET": "sfekjreoirgzoieoriugoietjoirog"
+  },
+  "development": {
+    "PORT": 3000,
+    "MONGODB_URI": "mongodb://localhost:27017/TodoApp",
+    "JWT_SECRET": "luirghiuregieurgiurgiujgieurg"
+  }
+}
