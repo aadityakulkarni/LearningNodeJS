@@ -25,8 +25,8 @@ const grades = [{
 
 const getUser = (id) => {
     return new Promise((resolve, reject) => {
-        const user = users.find((user) => user.id === id );
-        if(user) {
+        const user = users.find((user) => user.id === id);
+        if (user) {
             resolve(user);
         } else {
             reject(`Unable to find user with id ${id}.`);
@@ -49,31 +49,59 @@ const getStatus = (userId) => {
         })
         .then((grades) => {
             let average = 0;
-            if(grades.length > 0) {
+            if (grades.length > 0) {
                 average = (grades
-                .map((grade) => grade.grade)
-                .reduce((a, b) => a + b)) / grades.length;
+                    .map((grade) => grade.grade)
+                    .reduce((a, b) => a + b)) / grades.length;
             }
             console.log(average);
             return `${user.name} has a ${average}% in the class.`;
         });
 };
 
-getStatus(12).then((status) => {
-    console.log('User Status: ', status);
+// new async_hooks functionality
+const getStatusAlt = async(userId) => {
+    // the statement below is equivalent of resolving a promise
+    // return 'Aaditya';
+    // the statement below rejects the promise 
+    // throw new Error('This is an error');
+    const user = await getUser(userId);
+    // console.log(user);
+    const grades = await getGrades(user.schoolId);
+    // console.log(user, grades);
+    let average = 0;
+    if (grades.length > 0) {
+        average = (grades
+            .map((grade) => grade.grade)
+            .reduce((a, b) => a + b)) / grades.length;
+    }
+    console.log(average);
+    return `${user.name} has a ${average}% in the class.`;
+};
+
+getStatusAlt(2).then((status) => {
+    console.log(`Status: ${status}`);
 }).catch((e) => {
-    console.log('Error: ', e);
-})
+    console.log(`Error: ${e}`);
+});
+
+
+
+// getStatus(12).then((status) => {
+//     console.log('User Status: ', status);
+// }).catch((e) => {
+//     console.log('Error: ', e);
+// })
 
 
 getGrades(102).then((grades) => {
     console.log('User grades: ', grades);
 }).catch((e) => {
     console.log('Error: ', e);
-})
+});
 
 getUser(1).then((user) => {
     console.log('User: ', user);
 }).catch((e) => {
     console.log('Error: ', e);
-})
+});
