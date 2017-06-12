@@ -3,23 +3,32 @@
 
 const axios = require('axios');
 
-const getExchangeRate = (from, to) => {
+const getExchangeRate = async (from, to) => {
+    try{
+        const response = await axios.get(`http://api.fixer.io/latest?base=${from}`);
+        const rate = response.data.rates[to];
 
-    return axios.get(`http://api.fixer.io/latest?base=${from}`)
-        .then((response) => {
-            return response.data.rates[to];
-        })
-        .catch((e) => e);
+        if(rate) {
+            return rate;
+        } else {
+            throw new Error(`Unable to get exchange rate for ${from} and ${to} `);
+        }
+    } catch(e) {
+        throw new Error(`Unable to get exchange rate for ${from} and ${to} `);
+    }
+    
+
 };
 
-const getCountries = (currencyCode) => {
-    return axios.get(`https://restcountries.eu/rest/v2/currency/${currencyCode}`)
-        .then((response) => {
-            return response.data.map((country) => {
-                return country.name;
-            });
-        })
-        .catch((e) => e);
+const getCountries = async (currencyCode) => {
+    try {
+        const response = await axios.get(`https://restcountries.eu/rest/v2/currency/${currencyCode}`);
+        return response.data.map((country) => country.name);
+    } catch(e) {
+        throw new Error(`Unable to get countries that use ${currencyCode}`);
+    }
+    
+
 };
 
 const convertCurrency = (from, to, amount) => {
@@ -43,10 +52,11 @@ const convertCurrencyAlt = async (from, to, amount) => {
         ${to} can be used in the following countries: ${countries.join(',')}`;
 };
 
-convertCurrencyAlt('CAD', 'USD', 20).then((response) => {
-    console.log(response);
-}).catch((e) => {
-    console.log(e);
+convertCurrencyAlt('MMM', 'CAD', 20)
+    .then((response) => {
+        console.log(response);
+    }).catch((e) => {
+        console.log(e);
 });
 
 // convertCurrency('CAD', 'USD', 20).then((response) => {
